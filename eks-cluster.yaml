@@ -1,0 +1,47 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: labels-taints-demo
+  region: us-west-2
+  version: "1.23"
+
+availabilityZones: ["us-west-2a", "us-west-2b", "us-west-2c"]
+
+managedNodeGroups:
+- name: generic-workload
+  desiredCapacity: 2
+  instanceType: t3.small
+  ssh:
+    enableSsm: true
+  taints:
+  - key: cloudforbeginners.com/generic
+    value: "true"
+    effect: NoExecute
+  labels:
+    workload-type: generic
+
+- name: compute-optimized-workload
+  desiredCapacity: 2
+  instanceType: t3.small
+  ssh:
+    enableSsm: true
+  taints:
+  - key: cloudforbeginners.com/compute-optimized
+    value: "true"
+    effect: NoExecute
+  labels:
+    workload-type: compute-optimized
+
+- name: ssd-optimized-workload
+  desiredCapacity: 2
+  instanceType: t3.small
+  volumeType: gp2
+  ssh:
+    enableSsm: true
+  taints:
+  - key: cloudforbeginners.com/ssd-storage
+    value: "true"
+    effect: NoSchedule
+  labels:
+    workload-type: ssd-optimized
